@@ -100,7 +100,7 @@ next2_week_finish_time.grid(column=3, row=13)
 next2_week_finish_time_text = tk.Text(win, width=12, height=1)
 next2_week_finish_time_text.grid(column=3, row=14)
 
-# todo 此处后续做数据处理
+# todo 此处后续做数据处理22
 def doData():
 	dict = {'start_time_value':start_time_value.get(),
 			'finish_time_name':finish_time_name.get(),
