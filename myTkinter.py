@@ -1,7 +1,11 @@
 import tkinter as tk
 from tkinter import ttk
+import os
+from openpyxl import load_workbook
 
 dict = {}
+base_path = str(os.getcwd()).replace("\\", "/")
+excel_path = base_path+'/weeklyReport.xlsx'
 
 win = tk.Tk()
 win.title('测试组周报填写')
@@ -19,15 +23,12 @@ entry_fday_name = ttk.Entry(win, textvariable=finish_time_name)
 entry_fday_name.grid(column=3, row=1)
 # 选择测试还是配置
 ch_var = tk.StringVar()
-ch_label = ttk.Label(win, text='工作任务')
-ch_label.grid(column=2, row=2)
-# 执行人
-nameLabel = ttk.Label(win, text='执行人：')
-nameLabel.grid(column=0, row=2)
-person_name = tk.StringVar()
-entry_name = ttk.Entry(win, textvariable=person_name)
-entry_name.grid(column=1, row=2)
+ch_label = ttk.Label(win, text='配置和测试二选一')
+ch_label.grid(column=3, row=7)
 
+person_name = tk.StringVar()
+ch_person = ttk.Label(win,text='填报人在最右方选一个')
+ch_person.grid(column = 3,row =9)
 # 计划人天
 planlabel = ttk.Label(win, text='计划人天：')
 planlabel.grid(column=0, row=3)
@@ -41,15 +42,15 @@ finish_day_name = tk.StringVar()
 entry_fday_name = ttk.Entry(win, textvariable=finish_day_name)
 entry_fday_name.grid(column=3, row=3)
 # 本周工作内容
-day1 = ttk.Label(win, text='day1：')
+day1 = ttk.Label(win, text='day1：*')
 day1.grid(column=0, row=6)
-day2 = ttk.Label(win, text='day2：')
+day2 = ttk.Label(win, text='day2：*')
 day2.grid(column=0, row=7)
-day3 = ttk.Label(win, text='day3：')
+day3 = ttk.Label(win, text='day3：*')
 day3.grid(column=0, row=8)
-day4 = ttk.Label(win, text='day4：')
+day4 = ttk.Label(win, text='day4：*')
 day4.grid(column=0, row=9)
-day5 = ttk.Label(win, text='day5：')
+day5 = ttk.Label(win, text='day5：*')
 day5.grid(column=0, row=10)
 this_week_jobs = ttk.Label(win, text='本周工作内容：')
 this_week_jobs.grid(column=2, row=5)
@@ -66,7 +67,7 @@ day5_content = tk.Text(win, height=3)
 day5_content.grid(column=2, row=10)
 
 # 下周工作计划
-next_week_jobs = ttk.Label(win, text='下周工作计划：')
+next_week_jobs = ttk.Label(win, text='下周工作计划：*')
 next_week_jobs.grid(column=2, row=11)
 next_week_content_edittext = tk.Text(win, width=60, height=5)
 next_week_content_edittext.grid(column=2, row=12)
@@ -84,7 +85,7 @@ next_week_finish_time_text = tk.StringVar()
 next_week_finish_time_text_entry = ttk.Entry(win, textvariable=next_week_finish_time_text)
 next_week_finish_time_text_entry.grid(column=3, row=12)
 # 下下周工作计划
-next2_week_jobs = ttk.Label(win, text='下周工作计划：')
+next2_week_jobs = ttk.Label(win, text='下下周工作计划：*')
 next2_week_jobs.grid(column=2, row=13)
 next2_week_content_edittext = tk.Text(win, width=60, height=5)
 next2_week_content_edittext.grid(column=2, row=14)
@@ -126,21 +127,43 @@ def doData():
 #点击提交按钮
 def clickMe():
 	writeExcel(doData())
-action = tk.Button(win, text="提交周报", command=clickMe)
+
+action = tk.Button(win, text="提交周报",fg = 'blue',state = 'disabled',command=clickMe)
 action.grid(column=3, row=8)
 
 #todo 写excel里发邮件到邮箱
 #写到excel里
 def writeExcel(data):
-	''
+	wb = load_workbook(excel_path)
+	sheet = wb[data['person_name']]
+	sheet.cell(1,1).value = data['person_name']
+	wb.save(excel_path)
 
+#todo 校验选过填报人才能点提交周报
 # 更改配置或者测试
 def change_selection():
 	ch_label.config(text=ch_var.get())
+	action['state']= 'normal'
 
 r1 = tk.Radiobutton(win, text='测试', variable=ch_var, value='测试', command=change_selection)
-r1.grid(column=3, row=2)
+r1.grid(column=3, row=6)
 r2 = tk.Radiobutton(win, text='配置', variable=ch_var, value='配置与维护', command=change_selection)
-r2.grid(column=4, row=2)
+r2.grid(column=4, row=6)
+
+def change_person():
+	ch_person.config(text=person_name.get())
+
+rp1 = tk.Radiobutton(win, text='方瑛', variable=person_name, value='方瑛', command=change_person)
+rp1.grid(column=5, row=7)
+rp2 = tk.Radiobutton(win, text='吴桐', variable=person_name, value='吴桐', command=change_person)
+rp2.grid(column=5, row=8)
+rp3 = tk.Radiobutton(win, text='彭月', variable=person_name, value='彭月', command=change_person)
+rp3.grid(column=5, row=9)
+rp4 = tk.Radiobutton(win, text='杨晓龙', variable=person_name, value='杨晓龙', command=change_person)
+rp4.grid(column=5, row=10)
+rp5 = tk.Radiobutton(win, text='程北洋', variable=person_name, value='程北洋', command=change_person)
+rp5.grid(column=5, row=11)
+rp6 = tk.Radiobutton(win, text='翟松方', variable=person_name, value='翟松方', command=change_person)
+rp6.grid(column=5, row=12)
 
 win.mainloop()
