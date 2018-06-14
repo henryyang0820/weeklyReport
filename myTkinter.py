@@ -74,13 +74,15 @@ next_week_content_edittext.grid(column=2, row=12)
 # 下周计划开始时间
 next_week_start_time = ttk.Label(win, text='开始时间：(写在下方）')
 next_week_start_time.grid(column=1, row=11)
-next_week_start_time_text = tk.Text(win, width=12, height=1)
-next_week_start_time_text.grid(column=1, row=12)
+next_week_start_time_text = tk.StringVar()
+next_week_start_time_text_entry = ttk.Entry(win, textvariable=next_week_start_time_text)
+next_week_start_time_text_entry.grid(column=1, row=12)
 # 下周计划结束时间
 next_week_finish_time = ttk.Label(win, text='结束时间：(写在下方）')
 next_week_finish_time.grid(column=3, row=11)
-next_week_finish_time_text = tk.Text(win, width=12, height=1)
-next_week_finish_time_text.grid(column=3, row=12)
+next_week_finish_time_text = tk.StringVar()
+next_week_finish_time_text_entry = ttk.Entry(win, textvariable=next_week_finish_time_text)
+next_week_finish_time_text_entry.grid(column=3, row=12)
 # 下下周工作计划
 next2_week_jobs = ttk.Label(win, text='下周工作计划：')
 next2_week_jobs.grid(column=2, row=13)
@@ -90,15 +92,17 @@ next2_week_content_edittext.grid(column=2, row=14)
 # 下周计划开始时间
 next2_week_start_time = ttk.Label(win, text='开始时间：(写在下方）')
 next2_week_start_time.grid(column=1, row=13)
-next2_week_start_time_text = tk.Text(win, width=12, height=1)
-next2_week_start_time_text.grid(column=1, row=14)
+next2_week_start_time_text = tk.StringVar()
+next2_week_start_time_text_entry = ttk.Entry(win, textvariable=next2_week_start_time_text)
+next2_week_start_time_text_entry.grid(column=1, row=14)
 # 下周计划结束时间
 next2_week_finish_time = ttk.Label(win, text='结束时间：(写在下方）')
 next2_week_finish_time.grid(column=3, row=13)
-next2_week_finish_time_text = tk.Text(win, width=12, height=1)
-next2_week_finish_time_text.grid(column=3, row=14)
+next2_week_finish_time_text = tk.StringVar()
+next2_week_finish_time_text_entry = ttk.Entry(win, textvariable=next2_week_finish_time_text)
+next2_week_finish_time_text_entry.grid(column=3, row=14)
 
-# todo 此处后续做数据处理22
+#获得数据
 def doData():
 	dict = {'start_time_value':start_time_value.get(),
 			'finish_time_name':finish_time_name.get(),
@@ -109,28 +113,30 @@ def doData():
 			'day3_content':day3_content.get(index1=1.0,index2=100.0),
 			'day4_content':day4_content.get(index1=1.0,index2=100.0),
 			'day5_content':day5_content.get(index1=1.0,index2=100.0),
-			'next_week_start_time_text':next_week_start_time_text.get(index1=1.0,index2=100.0),
-			'next_week_finish_time_text':next_week_finish_time_text.get(index1=1.0,index2=100.0),
+			'next_week_start_time_text':next_week_start_time_text.get(),
+			'next_week_finish_time_text':next_week_finish_time_text.get(),
 			'next_week_content_edittext':next_week_content_edittext.get(index1=1.0,index2=100.0),
-			'next2_week_start_time_text': next2_week_start_time_text.get(index1=1.0,index2=100.0),
-			'next2_week_finish_time_text': next2_week_finish_time_text.get(index1=1.0,index2=100.0),
+			'next2_week_start_time_text': next2_week_start_time_text.get(),
+			'next2_week_finish_time_text': next2_week_finish_time_text.get(),
 			'next2_week_content_edittext': next2_week_content_edittext.get(index1=1.0,index2=100.0)
-
 			}
 	print(dict)
+	return dict
 
+#点击提交按钮
 def clickMe():
-	action.configure(doData())
-
-
+	writeExcel(doData())
 action = tk.Button(win, text="提交周报", command=clickMe)
 action.grid(column=3, row=8)
 
+#todo 写excel里发邮件到邮箱
+#写到excel里
+def writeExcel(data):
+	''
 
 # 更改配置或者测试
 def change_selection():
 	ch_label.config(text=ch_var.get())
-
 
 r1 = tk.Radiobutton(win, text='测试', variable=ch_var, value='测试', command=change_selection)
 r1.grid(column=3, row=2)
