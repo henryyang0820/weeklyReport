@@ -68,7 +68,6 @@ day5_content.grid(column=2, row=10)
 # 下周工作计划
 next_week_jobs = ttk.Label(win, text='下周工作计划：')
 next_week_jobs.grid(column=2, row=11)
-next_week_content = tk.StringVar()
 next_week_content_edittext = tk.Text(win, width=60, height=5)
 next_week_content_edittext.grid(column=2, row=12)
 
@@ -85,7 +84,6 @@ next_week_finish_time_text.grid(column=3, row=12)
 # 下下周工作计划
 next2_week_jobs = ttk.Label(win, text='下周工作计划：')
 next2_week_jobs.grid(column=2, row=13)
-next2_week_content = tk.StringVar()
 next2_week_content_edittext = tk.Text(win, width=60, height=5)
 next2_week_content_edittext.grid(column=2, row=14)
 
@@ -104,13 +102,20 @@ next2_week_finish_time_text.grid(column=3, row=14)
 def doData():
 	dict = {'start_time_value':start_time_value.get(),
 			'finish_time_name':finish_time_name.get(),
-			'ch_var':ch_var.get(),'person_name':person_name.get(),
+			'test_apply':ch_var.get(),'person_name':person_name.get(),
 			'plan_day_name':plan_day_name.get(),'finish_day_name':finish_day_name.get(),
 			'day1_content':day1_content.get(index1=1.0,index2=100.0),
 			'day2_content':day2_content.get(index1=1.0,index2=100.0),
 			'day3_content':day3_content.get(index1=1.0,index2=100.0),
 			'day4_content':day4_content.get(index1=1.0,index2=100.0),
-			'day5_content':day5_content.get(index1=1.0,index2=100.0)
+			'day5_content':day5_content.get(index1=1.0,index2=100.0),
+			'next_week_start_time_text':next_week_start_time_text.get(index1=1.0,index2=100.0),
+			'next_week_finish_time_text':next_week_finish_time_text.get(index1=1.0,index2=100.0),
+			'next_week_content_edittext':next_week_content_edittext.get(index1=1.0,index2=100.0),
+			'next2_week_start_time_text': next2_week_start_time_text.get(index1=1.0,index2=100.0),
+			'next2_week_finish_time_text': next2_week_finish_time_text.get(index1=1.0,index2=100.0),
+			'next2_week_content_edittext': next2_week_content_edittext.get(index1=1.0,index2=100.0)
+
 			}
 	print(dict)
 
