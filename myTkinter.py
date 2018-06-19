@@ -2,6 +2,8 @@ import tkinter as tk
 from tkinter import ttk
 import os
 from openpyxl import load_workbook
+from datetime import datetime
+from git import Repo
 
 dict = {}
 base_path = str(os.getcwd()).replace("\\", "/")
@@ -127,31 +129,94 @@ def doData():
 #点击提交按钮
 def clickMe():
 	writeExcel(doData())
+	pushExcel()
+	action['state'] = 'disabled'
+	action['text'] = '提交完关闭即可'
+	rp1['state'] = 'disabled'
+	rp2['state'] = 'disabled'
+	rp3['state'] = 'disabled'
+	rp4['state'] = 'disabled'
+	rp5['state'] = 'disabled'
+	rp6['state'] = 'disabled'
 
-action = tk.Button(win, text="提交周报",fg = 'blue',state = 'disabled',command=clickMe)
+action = tk.Button(win, text="提交周报",fg = 'blue',state = 'disabled',command=lambda:clickMe())
 action.grid(column=3, row=8)
 
-#todo 写excel里发邮件到邮箱
+#push到github
+def	pushExcel():
+	repo = Repo(base_path)
+	remote = repo.remote()
+	repo.git.checkout()
+	index = repo.index
+	index.add(['weeklyReport.xlsx'])
+	index.commit('pushed by GitPython')
+	remote.push()
+
 #写到excel里
 def writeExcel(data):
 	wb = load_workbook(excel_path)
 	sheet = wb[data['person_name']]
-	sheet.cell(1,1).value = data['person_name']
+	n_coordinate = 0
+	for row in sheet.iter_rows():  # 找到空白行号
+		for cell in row:
+			# print(cell.coordinate, cell.value)
+			if cell.value is not None:
+				n_coordinate = cell.row + 1
+	# print(n_coordinate)
+	this_time = datetime.now().strftime('%Y/%m/%d')
+	for n in range(5):
+		sheet.cell(n_coordinate+n,1).value = this_time
+		sheet.cell(n_coordinate+n,2).value = data['start_time_value']
+		sheet.cell(n_coordinate+n,3).value = data['finish_time_name']
+		sheet.cell(n_coordinate+n,4).value = "会展统合服务平台"
+		sheet.cell(n_coordinate+n,5).value = data['test_apply']
+		sheet.cell(n_coordinate+n,6).value = data['person_name']
+
+		sheet.cell(n_coordinate+n,8).value = data['plan_day_name']
+		sheet.cell(n_coordinate+n,9).value = data['finish_day_name']
+
+		if n==0:
+			sheet.cell(n_coordinate + n, 7).value = data['day1_content']
+			sheet.cell(n_coordinate + n, 10).value = this_time
+			sheet.cell(n_coordinate + n, 11).value = data['next_week_start_time_text']
+			sheet.cell(n_coordinate + n, 12).value = data['next_week_finish_time_text']
+			sheet.cell(n_coordinate + n, 13).value = "会展统合服务平台"
+			sheet.cell(n_coordinate + n, 14).value = data['test_apply']
+			sheet.cell(n_coordinate + n, 15).value = data['person_name']
+			sheet.cell(n_coordinate + n, 16).value = data['next2_week_content_edittext']
+			sheet.cell(n_coordinate + n, 17).value = "5"
+		elif n==1:
+			sheet.cell(n_coordinate + n, 7).value = data['day2_content']
+			sheet.cell(n_coordinate + n, 10).value = this_time
+			sheet.cell(n_coordinate + n, 11).value = data['next2_week_start_time_text']
+			sheet.cell(n_coordinate + n, 12).value = data['next2_week_finish_time_text']
+			sheet.cell(n_coordinate + n, 13).value = "会展统合服务平台"
+			sheet.cell(n_coordinate + n, 14).value = data['test_apply']
+			sheet.cell(n_coordinate + n, 15).value = data['person_name']
+			sheet.cell(n_coordinate + n, 16).value = data['next2_week_content_edittext']
+			sheet.cell(n_coordinate + n, 17).value = "5"
+		elif n==2:
+			sheet.cell(n_coordinate + n, 7).value = data['day3_content']
+		elif n==3:
+			sheet.cell(n_coordinate + n, 7).value = data['day4_content']
+		elif n==4:
+			sheet.cell(n_coordinate + n, 7).value = data['day5_content']
+
 	wb.save(excel_path)
 
-#todo 校验选过填报人才能点提交周报
 # 更改配置或者测试
 def change_selection():
 	ch_label.config(text=ch_var.get())
-	action['state']= 'normal'
 
 r1 = tk.Radiobutton(win, text='测试', variable=ch_var, value='测试', command=change_selection)
 r1.grid(column=3, row=6)
 r2 = tk.Radiobutton(win, text='配置', variable=ch_var, value='配置与维护', command=change_selection)
 r2.grid(column=4, row=6)
 
+#选择填报人，必须选择后提交周报的按钮才能使用
 def change_person():
 	ch_person.config(text=person_name.get())
+	action['state'] = 'normal'
 
 rp1 = tk.Radiobutton(win, text='方瑛', variable=person_name, value='方瑛', command=change_person)
 rp1.grid(column=5, row=7)
