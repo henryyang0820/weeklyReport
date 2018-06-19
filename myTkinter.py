@@ -129,6 +129,7 @@ def doData():
 #点击提交按钮
 def clickMe():
 	writeExcel(doData())
+	#通过git进行成员的数据交互，不方便
 	pushExcel()
 	action['state'] = 'disabled'
 	action['text'] = '提交完关闭即可'
